@@ -18,8 +18,8 @@ $(document).ready(function() {
     let currentService = '', currentPricePerHour = 0, currentStation = '';
     let timerInterval, modalInstance = null;
 
-    // 3. SELECCIÓN DE MENÚ (PC, PS5, XBOX, BEBIDAS)
-    $('.giant-btn').click(function() {
+    // 3. SELECCIÓN DE MENÚ (Delegación de eventos y transiciones sin espacios en blanco)
+    $('#mainMenu').off('click', '.giant-btn').on('click', '.giant-btn', function() {
         currentService = $(this).data('target');
         
         if (currentService === 'pc') currentPricePerHour = 15;
@@ -28,7 +28,9 @@ $(document).ready(function() {
         if (currentService === 'bebidas') currentPricePerHour = 0;
 
         $('#mainMenu').fadeOut('fast', function() {
-            $('#catalogSection').fadeIn('fast').css('display', 'flex');
+            $('#mainMenu').hide(); // Aseguramos que desaparezca
+            // Hacemos que el catálogo ocupe todo el espacio
+            $('#catalogSection').css('display', 'flex').hide().fadeIn('fast');
             
             if (currentService === 'bebidas') {
                 $('#stationView').hide();
@@ -61,23 +63,24 @@ $(document).ready(function() {
                 </div>
             `);
         }
-
-        // Clic en una máquina libre
-        $('.station-card.available').click(function() {
-            currentStation = $(this).data('station');
-            $('#stationView').fadeOut('fast', function() {
-                $('#gameView').css('display', 'flex').hide().fadeIn('fast');
-                loadGames(service);
-            });
-        });
     }
 
-    // 5. CARGAR JUEGOS
+    // Delegación de evento para clic en máquina libre
+    $('#stationGrid').off('click', '.station-card.available').on('click', '.station-card.available', function() {
+        currentStation = $(this).data('station');
+        $('#stationView').fadeOut('fast', function() {
+            $('#gameView').css('display', 'flex').hide().fadeIn('fast');
+            loadGames(currentService);
+        });
+    });
+
+    // 5. CARGAR JUEGOS (Optimización: loading="lazy" si hubiera imágenes)
     function loadGames(service) {
         let grid = $('#gameGrid');
         grid.empty();
 
         catalogData[service].forEach(game => {
+            // Agregamos loading="lazy" en caso de que en un futuro uses imágenes
             grid.append(`
                 <div class="game-card" data-name="${game.name.toLowerCase()}">
                     <i class="fas ${game.icon}"></i>
@@ -95,21 +98,27 @@ $(document).ready(function() {
         }
     }
 
-    // VOLVER ATRÁS
-    $('#btnBack').click(function() {
+    // VOLVER ATRÁS (Corregido para que no deje huecos)
+    $('#btnBack').off('click').on('click', function() {
         if (currentService === 'bebidas') {
-            $('#catalogSection').fadeOut('fast', () => $('#mainMenu').fadeIn('fast').css('display', 'flex'));
+            $('#catalogSection').fadeOut('fast', function() {
+                $('#catalogSection').hide();
+                $('#mainMenu').fadeIn('fast').css('display', 'flex');
+            });
         } else {
             if ($('#gameView').is(':visible')) {
                 $('#gameView').fadeOut('fast', () => $('#stationView').fadeIn('fast').css('display', 'block'));
             } else {
-                $('#stationView').fadeOut('fast', () => $('#mainMenu').fadeIn('fast').css('display', 'flex'));
+                $('#stationView').fadeOut('fast', () => {
+                    $('#catalogSection').hide();
+                    $('#mainMenu').fadeIn('fast').css('display', 'flex');
+                });
             }
         }
     });
 
     // 6. RESERVAR (Con temporizador)
-    $('#btnReservar').click(function() {
+    $('#btnReservar').off('click').on('click', function() {
         $('#modalActionType').text('Reserva');
         $('#modalConsoleName').text(currentStation + ' - ' + currentService.toUpperCase());
         $('#hrsInput').val(1);
@@ -134,15 +143,15 @@ $(document).ready(function() {
         }, 1000);
     });
 
-    $('#hrsInput').on('input', calcularTotalReserva);
+    $('#hrsInput').off('input').on('input', calcularTotalReserva);
     function calcularTotalReserva() {
         let hrs = $('#hrsInput').val();
         if (hrs < 1) { $('#hrsInput').val(1); hrs = 1; }
         $('#totalPay').text(hrs * currentPricePerHour);
     }
 
-    // 7. EMPEZAR AHORA (Sin temporizador de reserva)
-    $('#btnEmpezar').click(function() {
+    // 7. EMPEZAR AHORA
+    $('#btnEmpezar').off('click').on('click', function() {
         $('#modalActionType').text('Empezar');
         $('#modalConsoleName').text(currentStation + ' - ' + currentService.toUpperCase());
         $('#hrsInput').val(1);
@@ -154,7 +163,7 @@ $(document).ready(function() {
     });
 
     // PROCESAR PAGO
-    $('#btnConfirm').click(function() {
+    $('#btnConfirm').off('click').on('click', function() {
         clearInterval(timerInterval);
         if(modalInstance) modalInstance.hide();
         
@@ -175,30 +184,29 @@ $(document).ready(function() {
         $('#logOutput').scrollTop($('#logOutput')[0].scrollHeight);
     }
 
-    $('#btnSettings').click(function(e) {
+    $('#btnSettings').off('click').on('click', function(e) {
         e.stopPropagation();
         $('#settingsMenu').slideToggle('fast');
     });
 
-    // ABRIR BITÁCORA (CORREGIDO CON RETARDO PARA QUE NO FALLE)
-    $('#menuBitacora').click(function(e) {
+    $('#menuBitacora').off('click').on('click', function(e) {
         e.preventDefault();
-        $('#settingsMenu').slideUp('fast'); // Cierra el menú
+        $('#settingsMenu').slideUp('fast');
         
         setTimeout(function() {
             let bitacoraModal = new bootstrap.Modal(document.getElementById('bitacoraModal'));
             bitacoraModal.show();
-        }, 300); // Pequeño retardo para que el menú se cierre bien
+        }, 300);
     });
 
-    $(document).click(function(e) {
+    $(document).off('click.settings').on('click.settings', function(e) {
         if (!$(e.target).closest('.brand-box').length && !$(e.target).closest('#settingsMenu').length) {
             $('#settingsMenu').slideUp('fast');
         }
     });
 
     // BUSCADOR
-    $('#gameSearch').on('keyup', function() {
+    $('#gameSearch').off('keyup').on('keyup', function() {
         let val = $(this).val().toLowerCase();
         $('#gameGrid .game-card').each(function() {
             $(this).data('name').includes(val) ? $(this).show() : $(this).hide();
