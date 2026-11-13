@@ -1,0 +1,40 @@
+/* ... (Tu CSS anterior se mantiene igual) ... */
+
+/* El contenedor principal del catálogo ocupa todo */
+.catalog-section { 
+    flex: 3; 
+    background: var(--panel-bg); 
+    border: 1px solid #222; 
+    border-radius: 12px; 
+    padding: 20px; 
+    display: none; 
+    flex-direction: column; 
+    width: 100%;
+    height: 100%; /* CRUCIAL para que no haya huecos */
+}
+
+/* Estilos para la nueva vista de reservas */
+#reservasView {
+    width: 100%;
+    height: 100%;
+}
+
+#formReserva input, #formReserva select {
+    border-radius: 8px;
+}
+
+#listaReservas .list-group-item {
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+#listaReservas .list-group-item:hover {
+    transform: scale(1.02);
+}
+
+/* Ocultar scroll en la lista de reservas (se adapta al espacio) */
+.reservas-container {
+    overflow-y: auto; /* Permite scroll interno solo si hay demasiadas reservas */
+}
+.reservas-container::-webkit-scrollbar { width: 5px; }
+.reservas-container::-webkit-scrollbar-thumb { background: var(--primary-green); }
