@@ -5,152 +5,210 @@
     --text-light: #e0e0e0;
 }
 
-/* CAMBIO 1: Mejora de altura en móviles (100dvh) */
-body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); color: var(--text-light); min-height: 100dvh; overflow: hidden; margin: 0; }
-.app-container { display: flex; flex-direction: column; height: 100dvh; padding: 15px; }
-.top-section { display: flex; flex: 1; gap: 15px; height: calc(100% - 50px); }
+/* =========================================
+   CONFIGURACIÓN GLOBAL Y MÓVIL (100dvh)
+   ========================================= */
+* { box-sizing: border-box; }
 
-/* MENÚ PRINCIPAL */
-.main-menu { flex: 3; background: var(--panel-bg); border: 1px solid #222; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
-.menu-title { text-align: center; color: var(--primary-green); font-weight: 800; margin-bottom: 30px; letter-spacing: 2px; }
-.giant-buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.giant-btn { position: relative; overflow: hidden; background-size: cover; background-position: center; border: 2px solid #333; border-radius: 15px; padding: 30px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; transition: all 0.3s ease; cursor: pointer; }
-.giant-btn::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.75); z-index: 1; transition: background 0.3s; }
+body { 
+    font-family: 'Poppins', sans-serif; 
+    background-color: var(--bg-dark); 
+    color: var(--text-light); 
+    min-height: 100dvh; 
+    margin: 0; 
+    /* Permitimos scroll vertical en móvil, pero bloqueamos el horizontal */
+    overflow-y: auto; 
+    overflow-x: hidden; 
+}
+
+.app-container { 
+    display: flex; 
+    flex-direction: column; 
+    min-height: 100dvh; 
+    padding: 10px; 
+}
+
+/* =========================================
+   ESTRUCTURA PRINCIPAL (PC vs MÓVIL)
+   ========================================= */
+.top-section { 
+    display: flex; 
+    flex: 1; 
+    gap: 15px; 
+    height: 100%;
+}
+
+/* En PC, el menú y el catálogo van lado a lado */
+.main-menu, .catalog-section { flex: 3; }
+.side-panel { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+
+/* EN CELULAR: Todo se apila en columna */
+@media (max-width: 768px) {
+    .app-container { padding: 5px; }
+    .top-section { 
+        flex-direction: column; 
+        height: auto;
+    }
+    
+    /* El menú principal en celular */
+    .main-menu { 
+        flex: none; 
+        width: 100%; 
+        padding: 15px; 
+        min-height: auto;
+    }
+    
+    /* El catálogo en celular */
+    .catalog-section { 
+        flex: none; 
+        width: 100%; 
+        min-height: 400px; /* Le damos altura para que se vea bien */
+    }
+
+    /* El panel derecho (Reloj y Marca) */
+    .side-panel { 
+        flex: none; 
+        width: 100%; 
+        order: -1; /* Lo movemos arriba para que se vea el reloj primero */
+    }
+    
+    .brand-box { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; }
+    .brand-box h1 { font-size: 20px; text-align: left; margin: 0; }
+    
+    .clock-box { padding: 10px; }
+    .clock-box h3 { font-size: 25px; }
+}
+
+/* =========================================
+   MENÚ PRINCIPAL Y BOTONES GIGANTES
+   ========================================= */
+.menu-title { 
+    text-align: center; 
+    color: var(--primary-green); 
+    font-weight: 800; 
+    margin-bottom: 20px; 
+    letter-spacing: 2px; 
+    font-size: 1.5rem;
+}
+
+.giant-buttons-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 15px; 
+}
+
+.giant-btn { 
+    position: relative; 
+    overflow: hidden; 
+    background-size: cover; 
+    background-position: center; 
+    border: 2px solid #333; 
+    border-radius: 15px; 
+    padding: 20px 10px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    color: white; 
+    transition: all 0.3s ease; 
+    cursor: pointer; 
+    /* PUNTO CRÍTICO: Áreas táctiles mínimas de 44px */
+    min-height: 120px;
+}
+
+.giant-btn::before { 
+    content: ''; 
+    position: absolute; 
+    top: 0; left: 0; right: 0; bottom: 0; 
+    background: rgba(0, 0, 0, 0.75); 
+    z-index: 1; 
+}
+
 .giant-btn > * { position: relative; z-index: 2; }
-.giant-btn:hover::before { background: rgba(0, 0, 0, 0.5); }
-.giant-btn:hover { border-color: var(--primary-green); box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); transform: translateY(-5px); }
-.giant-btn i { font-size: 50px; margin-bottom: 15px; color: #555; transition: color 0.3s ease; }
-.giant-btn:hover i { color: var(--primary-green); }
-.giant-btn span { font-size: 22px; font-weight: 800; }
-.giant-btn small { color: #ccc; margin-top: 5px; }
-.bg-pc { background-image: url('https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80'); }
-.bg-ps5 { background-image: url('https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=600&q=80'); }
-.bg-xbox { background-image: url('https://images.unsplash.com/photo-1621259182978-fbf93132d53d?auto=format&fit=crop&w=600&q=80'); }
-.bg-drink { background-image: url('https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80'); }
+.giant-btn:hover { border-color: var(--primary-green); }
+.giant-btn i { font-size: 40px; margin-bottom: 10px; color: var(--primary-green); }
+.giant-btn span { font-size: 16px; font-weight: 800; text-align: center; line-height: 1.2; }
 
-/* CAMBIO 2: Catálogo ocupa TODO el espacio disponible */
+/* =========================================
+   CATÁLOGO Y RESERVAS (Textos truncados)
+   ========================================= */
 .catalog-section { 
-    flex: 3; 
     background: var(--panel-bg); 
     border: 1px solid #222; 
     border-radius: 12px; 
-    padding: 20px; 
-    display: none; /* Se cambia a flex con JS */
+    padding: 15px; 
+    display: none; 
     flex-direction: column; 
-    width: 100%;
-    height: 100%;
 }
-#stationView { width: 100%; height: 100%; }
+
+#stationView, #gameView { width: 100%; height: 100%; }
 
 .station-grid { 
     display: grid; 
-    grid-template-columns: repeat(4, 1fr); 
-    gap: 15px; 
-    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); 
+    gap: 10px; 
 }
 
-.station-card { background: #1a1a1a; border: 2px solid #333; border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.station-card i { font-size: 30px; margin-bottom: 5px; color: #555; }
-.station-card h4 { font-size: 16px; margin: 0; font-weight: 800; }
-.station-card span { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
-.station-card.available { border-color: rgba(57, 255, 20, 0.4); }
-.station-card.available:hover { border-color: var(--primary-green); box-shadow: 0 0 15px rgba(57, 255, 20, 0.3); transform: translateY(-3px); }
-.station-card.available i, .station-card.available span { color: var(--primary-green); }
-.station-card.busy { opacity: 0.5; cursor: not-allowed; background: #111; }
-.station-card.busy i, .station-card.busy span { color: #ff3333; }
+.station-card { 
+    background: #1a1a1a; border: 2px solid #333; border-radius: 10px; padding: 10px; 
+    text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    /* Botones táctiles */
+    min-height: 80px;
+}
+.station-card i { font-size: 25px; margin-bottom: 5px; }
+.station-card h4 { font-size: 14px; margin: 0; font-weight: 800; }
+.station-card span { font-size: 10px; text-transform: uppercase; margin-top: 5px; }
+.station-card.available { border-color: rgba(57, 255, 20, 0.4); color: var(--primary-green); }
+.station-card.busy { opacity: 0.5; cursor: not-allowed; color: #ff3333; }
 
-/* JUEGOS */
-.game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; overflow-y: auto; flex: 1; padding-right: 5px; }
-.game-grid::-webkit-scrollbar { width: 5px; }
-.game-grid::-webkit-scrollbar-thumb { background: var(--primary-green); }
-.game-card { background: #1e1e1e; border: 1px solid #333; border-radius: 10px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.3s; }
-.game-card i { font-size: 25px; color: #888; margin-bottom: 10px; }
-.game-card span { display: block; font-size: 11px; font-weight: 600; }
-.game-card:hover { border-color: var(--primary-green); background: #252525; transform: scale(1.05); }
-.game-card:hover i { color: var(--primary-green); }
+/* Buscador de Juegos */
+.game-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); 
+    gap: 10px; 
+    overflow-y: auto; 
+    max-height: 300px;
+    padding-right: 5px;
+}
 
-/* PANEL DERECHO */
-.side-panel { flex: 1; display: flex; flex-direction: column; gap: 15px; }
-.brand-box { background: var(--panel-bg); border: 1px solid var(--primary-green); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 0 15px rgba(57, 255, 20, 0.1); }
-.brand-box h1 { font-weight: 800; color: var(--primary-green); margin: 0; letter-spacing: 3px; line-height: 1; }
-.btn-gear { position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: var(--primary-green); font-size: 20px; cursor: pointer; transition: transform 0.3s; }
-.btn-gear:hover { transform: rotate(90deg); }
+.game-card { 
+    background: #1e1e1e; border: 1px solid #333; border-radius: 10px; padding: 10px; 
+    text-align: center; cursor: pointer; min-height: 80px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+/* PUNTO CRÍTICO: Textos largos truncados */
+.game-card span { 
+    display: block; font-size: 11px; font-weight: 600; 
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+}
 
-.settings-menu { position: absolute; top: 170px; right: 15px; background: var(--panel-bg); border: 1px solid var(--primary-green); border-radius: 8px; width: 200px; display: none; z-index: 1050; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+/* =========================================
+   PANEL DERECHO (Reloj y Marca)
+   ========================================= */
+.brand-box { background: var(--panel-bg); border: 1px solid var(--primary-green); border-radius: 12px; padding: 15px; text-align: center; position: relative; }
+.brand-box h1 { font-weight: 800; color: var(--primary-green); margin: 0; letter-spacing: 2px; font-size: 24px; line-height: 1.1; }
+.btn-gear { position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: var(--primary-green); font-size: 20px; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
+
+.settings-menu { position: absolute; top: 60px; right: 10px; background: var(--panel-bg); border: 1px solid var(--primary-green); border-radius: 8px; width: 200px; display: none; z-index: 1050; }
 .settings-menu ul { list-style: none; padding: 0; margin: 0; }
-.settings-menu ul li a { display: block; padding: 10px 15px; color: var(--text-light); text-decoration: none; font-size: 13px; border-bottom: 1px solid #333; transition: 0.3s; }
-.settings-menu ul li:last-child a { border-bottom: none; }
-.settings-menu ul li a:hover { background: #222; color: var(--primary-green); padding-left: 20px; }
+.settings-menu ul li a { display: block; padding: 12px 15px; color: var(--text-light); text-decoration: none; font-size: 14px; border-bottom: 1px solid #333; }
+.settings-menu ul li a:hover { background: #222; color: var(--primary-green); }
 
-.clock-box { background: #000; border: 1px solid #333; border-radius: 12px; padding: 15px; text-align: center; font-family: monospace; }
-.clock-box h3 { color: #fff; margin: 0; font-size: 35px; letter-spacing: 2px; }
-.clock-box small { color: #555; font-family: 'Poppins'; }
+.clock-box { background: #000; border: 1px solid #333; border-radius: 12px; padding: 10px; text-align: center; font-family: monospace; }
+.clock-box h3 { color: #fff; margin: 0; font-size: 28px; letter-spacing: 1px; }
 
-/* MODALES Y OTROS */
-.total-box { background: #111; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px dashed #333; }
-.log-console { background: #000; border-radius: 6px; padding: 10px; font-family: monospace; font-size: 12px; color: #00ffcc; overflow-y: auto; }
-.log-console div { margin-bottom: 5px; border-bottom: 1px dashed #222; padding-bottom: 5px; }
-.custom-toast { position: fixed; top: 20px; right: 20px; background: #1e1e1e; color: white; padding: 15px 25px; border-radius: 8px; border-left: 4px solid var(--primary-green); box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: none; z-index: 9999; font-weight: 600; }
-
-/* FOOTER */
-.app-footer { height: 50px; margin-top: 15px; background: var(--panel-bg); border-top: 1px solid var(--primary-green); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
-.social-links a { color: #888; font-size: 18px; margin-right: 15px; transition: 0.3s; }
-.social-links a:hover { color: var(--primary-green); }
-/* ============================================================
-   FOCUS VISUAL (requisito de la guía)
-   ============================================================ */
-.form-control:focus,
-input:focus,
-button:focus-visible,
-a:focus-visible {
-    border-color: var(--primary-green) !important;
-    box-shadow: 0 0 0 0.2rem rgba(57, 255, 20, 0.25) !important;
-    outline: none !important;
+/* Módulo de Reservas */
+#listaReservas { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+#listaReservas li { 
+    background: #111; border: 1px solid #333; padding: 10px; border-radius: 8px;
+    display: flex; flex-direction: column; justify-content: center;
 }
+#listaReservas strong { 
+    color: var(--primary-green); font-size: 14px; 
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* TRUNCAMIENTO */
+}
+#listaReservas span { font-size: 12px; color: #aaa; }
 
-/* Indicador sutil en el input de horas */
-#hrsInput:focus {
-    background: #0a0a0a;
-}
-
-/* Toast de error (reutilizando tu .custom-toast) */
-.custom-toast.warning {
-    border-left-color: #ffc107;
-}
-.catalog-section { 
-    flex: 3; 
-    background: var(--panel-bg); 
-    border: 1px solid #222; 
-    border-radius: 12px; 
-    padding: 20px; 
-    display: none; 
-    flex-direction: column; 
-    width: 100%;
-    height: 100%; /* CRUCIAL para que no haya huecos */
-}
-
-/* Estilos para la nueva vista de reservas */
-#reservasView {
-    width: 100%;
-    height: 100%;
-}
-
-#formReserva input, #formReserva select {
-    border-radius: 8px;
-}
-
-#listaReservas .list-group-item {
-    border-radius: 8px;
-    transition: transform 0.2s;
-}
-
-#listaReservas .list-group-item:hover {
-    transform: scale(1.02);
-}
-
-/* Ocultar scroll en la lista de reservas (se adapta al espacio) */
-.reservas-container {
-    overflow-y: auto; /* Permite scroll interno solo si hay demasiadas reservas */
-}
-.reservas-container::-webkit-scrollbar { width: 5px; }
-.reservas-container::-webkit-scrollbar-thumb { background: var(--primary-green); }
+/* Footer */
+.app-footer { height: auto; min-height: 50px; margin-top: 15px; background: var(--panel-bg); border-top: 1px solid var(--primary-green); border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; }
+.social-links a { color: #888; font-size: 20px; margin: 0 10px; display: inline-block; width: 44px; height: 44px; text-align: center; line-height: 44px; } /* Áreas táctiles */
