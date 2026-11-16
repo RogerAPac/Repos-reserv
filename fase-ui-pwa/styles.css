@@ -1,0 +1,113 @@
+:root {
+    --bg-dark: #050505;
+    --primary-green: #39ff14;
+    --panel-bg: #111111;
+    --text-light: #e0e0e0;
+}
+
+* { box-sizing: border-box; }
+
+body { 
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; 
+    background-color: var(--bg-dark); 
+    color: var(--text-light); 
+    min-height: 100dvh; 
+    margin: 0; 
+    overflow-x: hidden; 
+}
+
+.app-container { display: flex; flex-direction: column; min-height: 100dvh; padding: 10px; }
+
+.top-section { display: flex; flex: 1; gap: 15px; height: 100%; }
+
+/* EN CELULAR: Todo se apila en columna */
+@media (max-width: 768px) {
+    .top-section { flex-direction: column; height: auto; }
+    .main-menu, .catalog-section, .side-panel { flex: none; width: 100%; }
+    .side-panel { order: -1; }
+    .brand-box { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; }
+    .brand-box h1 { font-size: 20px; text-align: left; margin: 0; }
+    .clock-box { padding: 10px; }
+    .clock-box h3 { font-size: 25px; }
+}
+
+/* MENÚ PRINCIPAL */
+.main-menu { flex: 3; background: var(--panel-bg); border: 1px solid #222; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
+.menu-title { text-align: center; color: var(--primary-green); font-weight: 800; margin-bottom: 20px; font-size: 1.5rem; letter-spacing: 1px; }
+.giant-buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+/* Áreas táctiles de 44px garantizadas */
+.giant-btn { 
+    position: relative; overflow: hidden; background-size: cover; background-position: center; 
+    border: 2px solid #333; border-radius: 15px; padding: 20px 10px; 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; 
+    color: white; transition: all 0.3s ease; cursor: pointer; min-height: 120px;
+}
+.giant-btn::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.75); z-index: 1; }
+.giant-btn > * { position: relative; z-index: 2; }
+.giant-btn:hover { border-color: var(--primary-green); }
+.giant-btn i { font-size: 40px; margin-bottom: 10px; color: var(--primary-green); }
+.giant-btn span { font-size: 16px; font-weight: 800; text-align: center; line-height: 1.2; }
+
+.bg-pc { background-image: url('https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=600&q=80'); }
+.bg-ps5 { background-image: url('https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=600&q=80'); }
+.bg-xbox { background-image: url('https://images.unsplash.com/photo-1621259182978-fbf93132d53d?auto=format&fit=crop&w=600&q=80'); }
+.bg-drink { background-image: url('https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80'); }
+
+/* CATÁLOGO */
+.catalog-section { flex: 3; background: var(--panel-bg); border: 1px solid #222; border-radius: 12px; padding: 15px; display: none; flex-direction: column; }
+#stationView, #gameView { width: 100%; height: 100%; }
+.station-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
+
+.station-card { 
+    background: #1a1a1a; border: 2px solid #333; border-radius: 10px; padding: 10px; 
+    text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 80px;
+}
+.station-card i { font-size: 25px; margin-bottom: 5px; }
+.station-card h4 { font-size: 14px; margin: 0; font-weight: 800; }
+.station-card span { font-size: 10px; text-transform: uppercase; margin-top: 5px; }
+.station-card.available { border-color: rgba(57, 255, 20, 0.4); color: var(--primary-green); }
+.station-card.busy { opacity: 0.5; cursor: not-allowed; color: #ff3333; }
+
+/* JUEGOS */
+.game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; overflow-y: auto; max-height: 300px; padding-right: 5px; }
+.game-card { 
+    background: #1e1e1e; border: 1px solid #333; border-radius: 10px; padding: 10px; 
+    text-align: center; cursor: pointer; min-height: 80px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.game-card img { border-radius: 5px; margin-bottom: 5px; object-fit: cover; }
+/* Truncado de textos largos */
+.game-card span { display: block; font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+
+/* PANEL DERECHO */
+.side-panel { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+.brand-box { background: var(--panel-bg); border: 1px solid var(--primary-green); border-radius: 12px; padding: 15px; text-align: center; position: relative; }
+.brand-box h1 { font-weight: 800; color: var(--primary-green); margin: 0; font-size: 24px; line-height: 1.1; letter-spacing: 2px; }
+
+.btn-gear { 
+    position: absolute; top: 5px; right: 5px; background: transparent; border: none; color: var(--primary-green); font-size: 20px; cursor: pointer; 
+    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+}
+.settings-menu { position: absolute; top: 60px; right: 10px; background: var(--panel-bg); border: 1px solid var(--primary-green); border-radius: 8px; width: 200px; display: none; z-index: 1050; }
+.settings-menu ul { list-style: none; padding: 0; margin: 0; }
+.settings-menu ul li a { display: block; padding: 12px 15px; color: var(--text-light); text-decoration: none; font-size: 14px; border-bottom: 1px solid #333; }
+.settings-menu ul li a:hover { background: #222; color: var(--primary-green); }
+
+.clock-box { background: #000; border: 1px solid #333; border-radius: 12px; padding: 10px; text-align: center; font-family: monospace; }
+.clock-box h3 { color: #fff; margin: 0; font-size: 28px; }
+.clock-box small { color: #555; }
+
+/* Módulo de Reservas XSS */
+#listaReservas { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+#listaReservas li { background: #111; border: 1px solid #333; padding: 10px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; }
+#listaReservas strong { color: var(--primary-green); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#listaReservas span { font-size: 12px; color: #aaa; }
+
+/* Footer */
+.app-footer { height: auto; min-height: 50px; margin-top: 15px; background: var(--panel-bg); border-top: 1px solid var(--primary-green); border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; }
+.social-links a { color: #888; font-size: 20px; margin: 0 10px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
+.social-links a:hover { color: var(--primary-green); }
+
+.custom-toast { position: fixed; top: 20px; right: 20px; background: #1e1e1e; color: white; padding: 15px 25px; border-radius: 8px; border-left: 4px solid var(--primary-green); box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: none; z-index: 9999; font-weight: 600; }
